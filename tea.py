@@ -2,7 +2,7 @@ import argparse
 import logging
 
 from interpreter import Teaterpreter
-from tokenizing.token import TokenRegistrar
+
 from tokenizing.keywords import *
 from tokenizing.operators import *
 
@@ -26,20 +26,11 @@ def runasfastaspossiblebutitspythonsoitsokifitsalittleslow():
     logger = logging.getLogger(__name__)
     logging.basicConfig(encoding='utf-8', level=args.log_level, format='[%(asctime)s] [%(filename)s:%(lineno)s:%(name)s] [%(levelname)s] %(message)s', datefmt='%s')
 
-    # setup tokens
-    token_registrar = TokenRegistrar(
-        I32(),
-        Spill(),
-        Gimme(),
-        Separate(),
-        Assign()
-    )
-
     # setup the tea
-    tea_interp = Teaterpreter(args.file_name, token_registrar)
+    tea_interp = Teaterpreter(args.file_name)
 
-    token_list = tea_interp.process()
-    print(token_list)
+    processed = tea_interp.process()
+    print(f'processed: {processed}')
 
 if __name__ == '__main__': 
     runasfastaspossiblebutitspythonsoitsokifitsalittleslow()

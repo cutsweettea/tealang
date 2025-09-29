@@ -4,11 +4,14 @@ from .token import Token
 class Keyword(Token):
     pass
 
-class I32(Keyword):
+class VariableKeyword(Keyword):
+    pass
+
+class I32(VariableKeyword):
     def __init__(self):
         super().__init__('i32')
 
-class String(Keyword):
+class String(VariableKeyword):
     def __init__(self):
         super().__init__('string')
 

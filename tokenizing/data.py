@@ -5,13 +5,13 @@ from enum import Enum
 from typing import TypeVar
 from terror import IsNotInstanceTError, IsNotSubclassTError
 
-DataT = TypeVar('DataT')
+T = TypeVar('T')
 
 class DataType(Enum):
     STRING = str
 
 class DataToken:
-    def __init__(self, respective_keyword: Keyword, data_type: DataType, value: DataT):
+    def __init__(self, respective_keyword: Keyword, data_type: DataType, value: T):
         if not issubclass(respective_keyword, Keyword):
             IsNotSubclassTError().throw_formatted_single('respective_keyword', Keyword)
 
@@ -26,7 +26,7 @@ class DataToken:
         return f'[{self.data_type.name.upper()} "{self.value}"]'
 
 class StringData(DataToken):
-    def __init__(self, value: DataT):
+    def __init__(self, value: T):
         super().__init__(String, DataType.STRING, value)
         if not isinstance(value, self.data_type.value):
             IsNotInstanceTError().throw(f'string value is not of respective type {self.data_type.value.__name__}')

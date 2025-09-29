@@ -13,6 +13,14 @@ class Token:
 
     def __repr__(self):
         return f'[{type(self).__name__.upper()}]'
+    
+# other types of tokens
+class UnknownToken:
+    def __init__(self, data: str):
+        self.data = data
+
+    def __repr__(self):
+        return f'[UNK "{self.data}"]'
 
 class TokenRegistrar:
     def __init__(self, *tokens: Token):
