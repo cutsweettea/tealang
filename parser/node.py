@@ -9,7 +9,7 @@ class Node:
         pass
     
 class TriggerableNode:
-    def get_trigger_type() -> Token:
+    def get_trigger_types() -> list[type[Token]]:
         terror.IsNotImplementedTError().throw_default('get_trigger')
 
 class StructuredNode(Node):
@@ -18,6 +18,7 @@ class StructuredNode(Node):
             terror.IsNotInstanceTError().throw_formatted_single('required_structure', list, required_structure)
 
         for token in required_structure:
+            print(f'token={token}')
             if not is_valid_token(token):
                 terror.IsNotInstanceTError().throw_formatted_list_element('required_structure', (Token, UnknownToken), token)
 
