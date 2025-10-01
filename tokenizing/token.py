@@ -14,6 +14,9 @@ class Token:
     def __repr__(self):
         return f'[{type(self).__name__.upper()}]'
     
+class AnyToken:
+    pass
+    
 # other types of tokens
 class UnknownToken:
     def __init__(self, data: str):

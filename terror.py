@@ -11,6 +11,7 @@ class TErrorType(Enum):
     IsNotInstance = 1001
     IsNotSubclass = 1002
     IsNotImplemented = 1003
+    MissingNodePart = 1004
 
 class TError(Exception):
     """Tea error, AKA terror
@@ -69,3 +70,7 @@ class IsNotSubclassTError(TError):
 
     def throw_formatted_single(self, variable_name: str, required_type: type | tuple[type]):
         super().throw(f'{variable_name} must be a subclass of {' or '.join(t.__name__ for t in required_type) if isinstance(required_type, tuple) else required_type.__name__}')
+
+class MissingNodePartTError(TError):
+    def __init__(self):
+        super().__init__(TErrorType.MissingNodePart)

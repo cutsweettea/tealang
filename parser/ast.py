@@ -1,10 +1,13 @@
 import logging
 
 from tokenizing.token import Token
+from tokenizing.keywords import I32
 
 from .nodes.assign import AssignNode
 
-from util import is_valid_token, variable_creation_trigger_keywords
+from .node import Node
+
+from util import is_valid_token
 from _types import valid_tokens
 
 from terror import *
@@ -24,13 +27,30 @@ class AST:
 
     def parse(self):
         self.logger.debug('AST parsing started...')
-        all_trigger_types = variable_creation_trigger_keywords()
+        trigger_pairs = self.trigger_keyword_node_pairs()
         nodes = []
-        for t in range(len(self.tokens)):
+
+        tokens_len = len(self.tokens)
+        t = 0
+        while t < tokens_len:
             token = self.tokens[t]
+            token_type = type(token)
+            print(f'token={token}, t={t}')
+
             # print debug info on triggerable stuff
-            if type(token) in all_trigger_types:
-                self.logger.debug(f'found triggerable token {token.__class__.__name__}')
-                assign_stmt = AssignNode(self.tokens[t:])
-                print(f'appended assign: {assign_stmt}')
-                nodes.append(assign_stmt)
+            # i forgot about this really cool python feature i gotta use this more
+            if (node_type := trigger_pairs.get(token_type)) != None:
+                self.logger.debug(f'found triggerable token {token_type.__name__} with correlating node {node_type.__name__}')
+                stmt = node_type(self.tokens[t:])
+                self.logger.debug(f'appended assign: {stmt}')
+                nodes.append(stmt)
+                t += stmt.get_size()
+                continue
+
+            t += 1
+
+    @staticmethod
+    def trigger_keyword_node_pairs() -> dict[Token, Node]:
+        return {
+            I32: AssignNode
+        }
