@@ -4,21 +4,21 @@ from .token import Token
 class Keyword(Token):
     pass
 
-class VariableKeyword(Keyword, Token):
+class VariableKeyword(Keyword):
     pass
 
-class I32(VariableKeyword, Token):
+class I32(VariableKeyword):
     def __init__(self):
         super().__init__('i32')
 
-class String(VariableKeyword, Token):
+class String(VariableKeyword):
     def __init__(self):
         super().__init__('string')
 
-class Spill(Keyword, Token):
+class Spill(Keyword):
     def __init__(self):
         super().__init__('spill')
 
-class Gimme(Keyword, Token):
+class Gimme(Keyword):
     def __init__(self):
         super().__init__('gimme')
