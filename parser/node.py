@@ -1,65 +1,73 @@
 import terror
+import logging
 
-from tokenizing.token import Token, UnknownToken, AnyToken
+from util import is_valid_node
 
-from util import is_valid_token, is_valid_token_type, repr_obj
-from _types import valid_tokens
-
-class Node:
-    def __init__(self):
-        pass
-    
+class Node: 
     def __repr__(self):
-        return repr_obj(self)
-    
-class TriggerableNode(Node):
-    def get_trigger_types() -> list[type[Token]]:
-        terror.IsNotImplementedTError().throw_default('get_trigger')
+        _ALL_BUILTINS = [
+            '__class__',
+            '__delattr__',
+            '__dict__',
+            '__dir__',
+            '__doc__',
+            '__eq__',
+            '__firstlineno__',
+            '__format__',
+            '__ge__',
+            '__getattribute__',
+            '__getstate__',
+            '__gt__',
+            '__hash__',
+            '__init__',
+            '__init_subclass__',
+            '__le__',
+            '__lt__',
+            '__module__',
+            '__ne__',
+            '__new__',
+            '__reduce__',
+            '__reduce_ex__',
+            '__repr__',
+            '__setattr__',
+            '__sizeof__',
+            '__static_attributes__',
+            '__str__',
+            '__subclasshook__',
+            '__weakref__',
+        ]
+        
+        obj_dir = dir(self)
+        filtered = []
 
-class StructuredNode(Node):
-    def __init__(self, required_structure: list[type[Token] | type[UnknownToken] | AnyToken], tokens: list[Token]):
-        if not isinstance(required_structure, list):
-            terror.IsNotInstanceTError().throw_formatted_single('required_structure', list, required_structure)
-
-        for token in required_structure:
-            if not is_valid_token_type(token):
-                terror.IsNotInstanceTError().throw_formatted_list_element('required_structure', valid_tokens, token)
-
-        if not isinstance(tokens, list):
-            terror.IsNotInstanceTError().throw_formatted_single('tokens', list, tokens)
-
-        for token in tokens:
-            if not is_valid_token(token):
-                terror.IsNotInstanceTError().throw_formatted_list_element('tokens', valid_tokens, token)
-
-        required_structure_len = len(required_structure)
-        missing_token_count = required_structure_len - len(tokens)
-        if missing_token_count > 0:
-            terror.MissingNodePartTError().throw(f'missing {missing_token_count} tokens, being {', '.join([t.__name__ for t in required_structure[:missing_token_count]])}')
-
-        required_tokens = []
-        for t in range(0, required_structure_len):
-            token = tokens[t]
-            required_type = required_structure[t]
-
-            # skip if it's an anything token
-            if required_type == AnyToken: 
-                required_tokens.append(token)
+        for v in obj_dir:
+            if v in _ALL_BUILTINS:
                 continue
             
-            if not isinstance(token, required_type):
-                terror.IsNotInstanceTError().throw(f'token at index {t} for {self.__class__.__name__} doesn\'t match required type {required_type.__name__}, found {type(token).__name__}\nrequired structure is: {[s.__name__ for s in required_structure]}')
+            if callable(getattr(self, v)):
+                continue
+            
+            if v.startswith('_'):
+                continue
+            
+            filtered.append(v)
 
-            required_tokens.append(token)
-        
-        self.required_structure = required_structure
-        self.tokens = required_tokens
+        return f'<{self.__class__.__name__} {', '.join([f'{v}={getattr(self, v)}' for v in filtered])}>'
 
-    def check_values(self):
-        terror.IsNotImplementedTError().throw_default('check_values')
+class NodeRegistrar:
+    def __init__(self, *nodes: Node):
+        self.logger = logging.getLogger(__name__)
+        for node in nodes:
+            if not is_valid_node(node):
+                terror.IsNotInstanceTError().throw_formatted_list_element('nodes', Node, node)
 
-    def get_size(self):
-        return len(self.required_structure)
+        self.nodes = nodes
+        self.logger.debug(f'init setup {len(nodes)} node(s)')
 
-    def __repr__(self):
-        return repr_obj(self, hidden_attributes=['required_structure'])
+    def find_trigger_node_matches(self):
+        matches = {}
+        for node in self.nodes:
+            if 'TriggerableNode' in [b.__name__ for b in node.__bases__]:
+                for t in node.get_trigger_types():
+                    matches.update({t: node})
+        return matches

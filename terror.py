@@ -50,7 +50,7 @@ class IsNotInstanceTError(TError):
     def throw_formatted_single(self, variable_name: str, required_type: type | tuple[type], variable_passed):
         correct_type = variable_passed
         if not isinstance(type(correct_type), type): correct_type = type(correct_type)
-        super().throw(f'{variable_name} must be of type {' or '.join(t.__name__ for t in required_type) if isinstance(required_type, tuple) else required_type.__name__}, not {correct_type.__name__}')
+        super().throw(f'{variable_name} must be of type {', '.join(required_type) if isinstance(required_type, tuple) else required_type.__name__}, not {correct_type.__name__}')
 
     def throw_formatted_list_element(self, list_name: str, required_type: type | tuple[type], variable_passed):
         correct_types = []
@@ -58,18 +58,18 @@ class IsNotInstanceTError(TError):
             for rt in required_type:
                 if not isinstance(type(rt), type): correct_types.append(type(rt))
                 else: correct_types.append(rt)
-            super().throw(f'every element within list {list_name} must be of type {' or '.join(t.__name__ for t in required_type) if isinstance(required_type, tuple) else required_type.__name__}, not {type(variable_passed).__name__}')
+            super().throw(f'every element within list {list_name} must be of type {', '.join(required_type) if isinstance(required_type, tuple) else required_type.__name__}, not {type(variable_passed).__name__}')
         else:
             correct_type = required_type
             if not isinstance(type(correct_type), type): correct_type = type(correct_type)
-            super().throw(f'every element within list {list_name} must be of type {' or '.join(t.__name__ for t in required_type) if isinstance(required_type, tuple) else required_type.__name__}, not {type(variable_passed).__name__}')
+            super().throw(f'every element within list {list_name} must be of type {', '.join(required_type) if isinstance(required_type, tuple) else required_type.__name__}, not {type(variable_passed).__name__}')
 
 class IsNotSubclassTError(TError):
     def __init__(self):
         super().__init__(TErrorType.IsNotSubclass)
 
     def throw_formatted_single(self, variable_name: str, required_type: type | tuple[type]):
-        super().throw(f'{variable_name} must be a subclass of {' or '.join(t.__name__ for t in required_type) if isinstance(required_type, tuple) else required_type.__name__}')
+        super().throw(f'{variable_name} must be a subclass of {', '.join(required_type) if isinstance(required_type, tuple) else required_type.__name__}')
 
 class MissingNodePartTError(TError):
     def __init__(self):

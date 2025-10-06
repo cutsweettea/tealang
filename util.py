@@ -1,19 +1,31 @@
-from tokenizing.keywords import I32
-
-from _types import valid_tokens
+valid_token_names = ('Token', 'UnknownToken', 'VariableKeyword', 'DataToken', 'Assign', 'AnyToken', 'I32', 'Spill', 'OpenParentheses', 'CloseParentheses', 'StringData', 'Separate')
+valid_node_names = ('Node', 'StructuredNode', 'TriggerableNode', 'FunctionNode', 'AssignNode', 'SpillNode')
+valid_trigger_node_names = ('Node', 'StructuredNode', 'TriggerableNode', 'FunctionNode')
 
 def is_blank(data: str):
     return data.isspace() or len(data) == 0
 
 def is_valid_token(token) -> bool:
-    for vt in valid_tokens:
-        if isinstance(token, vt):
-            return token
+    for vt in valid_token_names:
+        if token.__class__.__name__ == vt:
+            return True
     return False
 
 def is_valid_token_type(token) -> bool:
-    for vt in valid_tokens:
+    for vt in valid_token_names:
         if token is vt: 
+            return True
+    return False
+
+def is_valid_node(node) -> bool:
+    for vn in valid_node_names:
+        if node.__name__ == vn:
+            return True
+    return False
+
+def is_valid_node_type(node) -> bool:
+    for vn in valid_node_names:
+        if node.__name__ == vn:
             return True
     return False
 

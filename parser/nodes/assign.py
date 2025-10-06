@@ -1,4 +1,4 @@
-from parser.node import StructuredNode, TriggerableNode
+from parser.types import StructuredNode, TriggerableNode
 
 from tokenizing.token import Token, UnknownToken, AnyToken
 from tokenizing.keywords import VariableKeyword, I32

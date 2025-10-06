@@ -23,7 +23,9 @@ class Tokenizer:
             Spill(),
             Gimme(),
             Separate(),
-            Assign()
+            Assign(),
+            OpenParentheses(),
+            CloseParentheses()
         )
 
         # setup process vars

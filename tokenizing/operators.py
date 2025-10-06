@@ -10,3 +10,11 @@ class Separate(Operator):
 class Assign(Operator):
     def __init__(self):
         super().__init__('=')
+
+class OpenParentheses(Operator):
+    def __init__(self):
+        super().__init__('(')
+
+class CloseParentheses(Operator):
+    def __init__(self):
+        super().__init__(')')
