@@ -1,36 +1,42 @@
 import logging
+import terror
 
-from terror import IsNotInstanceTError
+class BaseToken:
+    def extract_data(self):
+        terror.InternalNotImplementedTError().throw(f'extract_data not implemented on class {self.__class__.__name__}')
 
-class Token:
+class Token(BaseToken):
     """class for representing all tokens within the code
     """
     def __init__(self, context: str):
         if not isinstance(context, str):
-            IsNotInstanceTError().throw_formatted_single(str, context)
+            terror.IsNotInstanceTError().throw_formatted_single(str, context)
 
         self.context = context
 
     def __repr__(self):
         return f'[{type(self).__name__.upper()}]'
     
-class AnyToken:
+class AnyToken(BaseToken):
     pass
     
 # other types of tokens
-class UnknownToken:
+class UnknownToken(BaseToken):
     def __init__(self, data: str):
         self.data = data
 
     def __repr__(self):
         return f'[UNK "{self.data}"]'
+    
+    def extract_data(self):
+        return self.data
 
 class TokenRegistrar:
     def __init__(self, *tokens: Token):
         self.logger = logging.getLogger(__name__)
         for s in tokens:
             if not isinstance(s, Token):
-                IsNotInstanceTError().throw_formatted_list_element('tokens', Token, s)
+                terror.IsNotInstanceTError().throw_formatted_list_element('tokens', Token, s)
 
         self.tokens = tokens
         self.logger.debug(f'init setup {len(tokens)} token(s)')

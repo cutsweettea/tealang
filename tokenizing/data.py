@@ -1,5 +1,5 @@
-from .token import Token
 from .keywords import Keyword, String
+from .token import BaseToken
 
 from enum import Enum
 from typing import TypeVar
@@ -10,7 +10,7 @@ T = TypeVar('T')
 class DataType(Enum):
     STRING = str
 
-class DataToken:
+class DataToken(BaseToken):
     def __init__(self, respective_keyword: Keyword, data_type: DataType, value: T):
         if not issubclass(respective_keyword, Keyword):
             IsNotSubclassTError().throw_formatted_single('respective_keyword', Keyword)
@@ -24,6 +24,9 @@ class DataToken:
 
     def __repr__(self):
         return f'[{self.data_type.name.upper()} "{self.value}"]'
+    
+    def extract_data(self):
+        return self.value
 
 class StringData(DataToken):
     def __init__(self, value: T):

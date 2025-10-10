@@ -30,7 +30,6 @@ def runasfastaspossiblebutitspythonsoitsokifitsalittleslow():
     tea_interp = Teaterpreter(args.file_name)
 
     processed = tea_interp.process()
-    print(f'processed: {processed}')
 
 if __name__ == '__main__': 
     runasfastaspossiblebutitspythonsoitsokifitsalittleslow()

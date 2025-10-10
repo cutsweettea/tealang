@@ -1,12 +1,23 @@
-from parser.types import FunctionNode, TriggerableNode
+import terror
 
-from tokenizing.token import Token
+from parser.types import FunctionNode, TriggerableNode
+from parser.evaluator import Evaluator
+
+from tokenizing.token import BaseToken
 from tokenizing.keywords import Spill
-from tokenizing.operators import Assign
+from tokenizing.data import StringData
 
 class SpillNode(FunctionNode, TriggerableNode):
-    def __init__(self, tokens: list[Token]):
-        super().__init__(tokens)
+    def __init__(self, tokens: list[BaseToken], evaluator: Evaluator):
+        super().__init__(tokens, evaluator)
 
-    def get_trigger_types() -> list[type[Token]]:
+        self.strings = []
+        for ti in range(len(self._final_tokens)):
+            token = self._final_tokens[ti]
+            if not isinstance(token, StringData):
+                terror.IsNotInstanceTError().throw_formatted_list_element('tokens', StringData, token)
+
+            self.strings.append(token.extract_data())
+
+    def get_trigger_types() -> list[type[BaseToken]]:
         return [Spill]

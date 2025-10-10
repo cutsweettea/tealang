@@ -1,4 +1,4 @@
-valid_token_names = ('Token', 'UnknownToken', 'VariableKeyword', 'DataToken', 'Assign', 'AnyToken', 'I32', 'Spill', 'OpenParentheses', 'CloseParentheses', 'StringData', 'Separate')
+valid_token_names = ('Token', 'UnknownToken', 'VariableKeyword', 'DataToken', 'Assign', 'AnyToken', 'I32', 'Spill', 'OpenParentheses', 'CloseParentheses', 'StringData', 'Separate', 'Concatenate')
 valid_node_names = ('Node', 'StructuredNode', 'TriggerableNode', 'FunctionNode', 'AssignNode', 'SpillNode')
 valid_trigger_node_names = ('Node', 'StructuredNode', 'TriggerableNode', 'FunctionNode')
 
@@ -79,6 +79,9 @@ def repr_obj(obj: any, *, hidden_attributes: list[str] = [], force_show: list[st
         if callable(getattr(obj, v)):
             continue
         
+        if v.startswith('_'):
+            continue
+        
         filtered.append(v)
 
-    return f'<{obj.__class__.__name__} {', '.join([f'{v}={getattr(obj, v)}' for v in filtered])}>'
+    return f'<{obj.__class__.__name__}{' ' if len(filtered) != 0 else ''}{', '.join([f'{v}={getattr(obj, v)}' for v in filtered])}>'

@@ -3,11 +3,12 @@ import terror
 from tokenizing.token import Token, UnknownToken, AnyToken
 
 from parser.node import Node
+from parser.evaluator import Evaluator
 
 from util import is_valid_token, repr_obj, valid_token_names
 
 class StructuredNode(Node):
-    def __init__(self, required_structure: list[type[Token] | type[UnknownToken] | AnyToken], tokens: list[Token]):
+    def __init__(self, required_structure: list[type[Token] | type[UnknownToken] | AnyToken], tokens: list[Token], evaluator: Evaluator):
         if not isinstance(required_structure, list):
             terror.IsNotInstanceTError().throw_formatted_single('required_structure', list, required_structure)
 
@@ -38,14 +39,18 @@ class StructuredNode(Node):
 
             required_tokens.append(token)
         
-        self.required_structure = required_structure
-        self.tokens = required_tokens
+        self._required_structure = required_structure
+        self._tokens = required_tokens
+        self._evaluator = evaluator
 
     def check_values(self):
         terror.IsNotImplementedTError().throw_default('check_values')
 
     def get_size(self):
-        return len(self.required_structure)
+        return len(self._required_structure)
+    
+    def get_tokens(self):
+        return self._tokens
 
     def __repr__(self):
         return repr_obj(self, hidden_attributes=['required_structure'])

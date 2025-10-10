@@ -6,12 +6,15 @@ import sys
 from enum import Enum
 
 class TErrorType(Enum):
-    InternalTypeError = 100
+    InternalType = 100
+    InternalNotImplemented = 101
+    InternalMissingToken = 102
     FileDoesNotExist = 1000
     IsNotInstance = 1001
     IsNotSubclass = 1002
     IsNotImplemented = 1003
     MissingNodePart = 1004
+    MissingConcatenatePart = 1005
 
 class TError(Exception):
     """Tea error, AKA terror
@@ -23,7 +26,7 @@ class TError(Exception):
         # check instance of `terror_type`, raise critical if not
         if not isinstance(terror_type, TErrorType):
             self.logger.critical(f'type variable passed to TError must be of type {type(TErrorType).__name__}, not {type(terror_type).__name__}')
-            sys.exit(TErrorType.InternalTypeError)
+            sys.exit(TErrorType.InternalType)
 
         self.terror_type = terror_type
 
@@ -74,3 +77,15 @@ class IsNotSubclassTError(TError):
 class MissingNodePartTError(TError):
     def __init__(self):
         super().__init__(TErrorType.MissingNodePart)
+
+class MissingConcatenatePartTError(TError):
+    def __init__(self):
+        super().__init__(TErrorType.MissingConcatenatePart)
+
+class InternalNotImplementedTError(TError):
+    def __init__(self):
+        super().__init__(TErrorType.InternalNotImplemented)
+
+class InternalMissingTokenTError(TError):
+    def __init__(self):
+        super().__init__(TErrorType.InternalMissingToken)

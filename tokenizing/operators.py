@@ -18,3 +18,7 @@ class OpenParentheses(Operator):
 class CloseParentheses(Operator):
     def __init__(self):
         super().__init__(')')
+
+class Concatenate(Operator):
+    def __init__(self):
+        super().__init__('+')

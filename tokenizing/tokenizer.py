@@ -25,7 +25,8 @@ class Tokenizer:
             Separate(),
             Assign(),
             OpenParentheses(),
-            CloseParentheses()
+            CloseParentheses(),
+            Concatenate()
         )
 
         # setup process vars

@@ -25,5 +25,7 @@ class Teaterpreter:
 
     def process(self):
         tokens = self.tokenizer.process()
-        parsed = AST(tokens).parse()
-        print(parsed)
+        self.logger.debug(f'found tokens; {tokens}')
+        
+        nodes = AST(tokens).parse()
+        self.logger.debug(f'found nodes; {nodes}')

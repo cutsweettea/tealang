@@ -1,12 +1,14 @@
 import logging
 
 from tokenizing.token import Token
-from tokenizing.keywords import I32
 
 from .nodes.assign import AssignNode
 from .nodes.spill import SpillNode
 
-from .node import Node, NodeRegistrar
+from .env import Environment
+from .evaluator import Evaluator
+
+from .node import NodeRegistrar
 
 from util import is_valid_token, valid_token_names
 
@@ -26,13 +28,15 @@ class AST:
             AssignNode,
             SpillNode
         )
+
+        self.env = Environment()
+        self.evaluator = Evaluator(self.env)
         
         self.logger = logging.getLogger(__name__)
 
     def parse(self):
         self.logger.debug('AST parsing started...')
         trigger_pairs = self.node_registrar.find_trigger_node_matches()
-
         nodes = []
 
         tokens_len = len(self.tokens)
@@ -45,7 +49,7 @@ class AST:
             # i forgot about this really cool python feature i gotta use this more
             if (pair := trigger_pairs.get(token_type)) != None:
                 self.logger.debug(f'found triggerable token {token_type.__name__} with correlating node {pair.__name__}')
-                stmt = pair(self.tokens[t:])
+                stmt = pair(self.tokens[t:], self.evaluator)
                 self.logger.debug(f'appended assign: {stmt}')
                 nodes.append(stmt)
                 t += stmt.get_size()
