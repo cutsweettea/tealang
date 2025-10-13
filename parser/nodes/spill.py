@@ -7,6 +7,8 @@ from tokenizing.token import BaseToken
 from tokenizing.keywords import Spill
 from tokenizing.data import StringData
 
+from walker.standards import MapCode
+
 class SpillNode(FunctionNode, TriggerableNode):
     def __init__(self, tokens: list[BaseToken], evaluator: Evaluator):
         super().__init__(tokens, evaluator)
@@ -21,3 +23,6 @@ class SpillNode(FunctionNode, TriggerableNode):
 
     def get_trigger_types() -> list[type[BaseToken]]:
         return [Spill]
+    
+    def export_bytes(self):
+        for s in self.strings

@@ -9,6 +9,7 @@ class TErrorType(Enum):
     InternalType = 100
     InternalNotImplemented = 101
     InternalMissingToken = 102
+    InternalNotInstance = 103
     FileDoesNotExist = 1000
     IsNotInstance = 1001
     IsNotSubclass = 1002
@@ -89,3 +90,7 @@ class InternalNotImplementedTError(TError):
 class InternalMissingTokenTError(TError):
     def __init__(self):
         super().__init__(TErrorType.InternalMissingToken)
+
+class InternalNotInstanceTError(TError):
+    def __init__(self):
+        super().__init__(TErrorType.InternalNotInstance)

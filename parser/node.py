@@ -53,6 +53,9 @@ class Node:
             filtered.append(v)
 
         return f'<{self.__class__.__name__} {', '.join([f'{v}={getattr(self, v)}' for v in filtered])}>'
+    
+    def export_bytes(self):
+        terror.InternalNotImplementedTError().throw('get onnat car')
 
 class NodeRegistrar:
     def __init__(self, *nodes: Node):

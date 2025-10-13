@@ -37,11 +37,18 @@ class Evaluator():
     def evaluate(self, tokens: list):
         tokens_len = len(tokens)
         self.logger.debug(f'new evaluation started for: {tokens}, len={tokens_len}')
+        if tokens_len == 1:
+            return tokens
 
         ti = 0
         while ti < tokens_len:
+            tokens_len = len(tokens)
+            if ti > tokens_len:
+                self.logger.debug(f'returning b/c token index exceeds tokens length ({ti}>{tokens_len})')
+                return tokens
+            
+            self.logger.debug(f'checking @ index {ti} in {tokens}, len={tokens_len}')
             token = tokens[ti]
-            self.logger.debug(f'checking @ index {ti} in {tokens}')
             
             if isinstance(token, Concatenate):
                 self.logger.debug(f'found concatenate at index {ti} w/ {ti} skipped')
@@ -65,9 +72,13 @@ class Evaluator():
 
                 if isinstance(token_left, StringData):
                     concat_res = self._str_concat(token_left.value, token_right)
-                    idx = ti-1
+                    minus_offset = 1
+                    idx = ti-minus_offset
+
+                    # 3 - 1 cuz its popping 1 value to the left, the array updates each time and moves the object i wanna remove in the same spot
+                    # so idx is constant, 3 is cuz its removing 3 values, so pls work
                     rem1, rem2, rem3 = tokens.pop(idx), tokens.pop(idx), tokens.pop(idx)
-                    ti += 3
+                    ti -= (3-minus_offset)
 
                     tokens.insert(idx, concat_res)
                     self.logger.debug(f'popped tokens; {rem1}, {rem2}, {rem3}, added; {concat_res} @ index {idx}')
