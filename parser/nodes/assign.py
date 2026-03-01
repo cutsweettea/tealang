@@ -1,5 +1,7 @@
 import terror
 
+from byterepr import ByteReprable
+
 from parser.types import StructuredNode, TriggerableNode
 from parser.evaluator import Evaluator
 
@@ -7,7 +9,7 @@ from tokenizing.token import Token, UnknownToken, AnyToken
 from tokenizing.keywords import VariableKeyword, I32
 from tokenizing.operators import Assign
 
-class AssignNode(StructuredNode, TriggerableNode):
+class AssignNode(StructuredNode, TriggerableNode, ByteReprable):
     def __init__(self, tokens: list[Token], evaluator: Evaluator):
         super().__init__([VariableKeyword, UnknownToken, Assign, AnyToken], tokens, evaluator)
 
@@ -33,5 +35,17 @@ class AssignNode(StructuredNode, TriggerableNode):
         self.name = var_obj.name
         self.value = var_obj.value
 
+        self.__type_pairs = {
+            int: 1,
+            str: 2
+        }
+
     def get_trigger_types() -> list[type[Token]]:
         return [I32]
+
+    def bexport(self, *vals) -> bytes:
+        return self._repr_vals([
+            self.__type_pairs.get(self.var_type),
+            hex(vals[0]),
+            self.value
+        ])

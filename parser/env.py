@@ -22,22 +22,22 @@ class Environment:
             except Exception as ex:
                 terror.IsNotImplementedTError().throw(f'threw {ex.__class__.__name__}; variable value must be of type required by {var_type.__class__.__name__}, which is {required_type.__name__}')
 
-            self._type = required_type
-            self._name = var_name.extract_data()
-            self._value = value
+            self.__type = required_type
+            self.__name = var_name.extract_data()
+            self.__value = value
 
         @property
         def var_type(self):
-            return self._type
+            return self.__type
         
         @property
         def name(self):
-            return self._name
+            return self.__name
         
         @property
         def value(self):
-            return self._value
-        
+            return self.__value
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self._variables = []

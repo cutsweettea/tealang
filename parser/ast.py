@@ -8,7 +8,7 @@ from .nodes.spill import SpillNode
 from .env import Environment
 from .evaluator import Evaluator
 
-from .node import NodeRegistrar
+from .node import NodeRegistrar, Node
 
 from util import is_valid_token, valid_token_names
 
@@ -34,7 +34,7 @@ class AST:
         
         self.logger = logging.getLogger(__name__)
 
-    def parse(self):
+    def parse(self) -> list[Node]:
         self.logger.debug('AST parsing started...')
         trigger_pairs = self.node_registrar.find_trigger_node_matches()
         nodes = []

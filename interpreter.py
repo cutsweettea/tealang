@@ -23,9 +23,11 @@ class Teaterpreter:
         self.logger.debug(f'loaded {file_path} into teaterpreter')
         self.tokenizer = Tokenizer(self.file_data)
 
-    def process(self):
+    def nodeify(self):
         tokens = self.tokenizer.process()
         self.logger.debug(f'found tokens; {tokens}')
         
         nodes = AST(tokens).parse()
         self.logger.debug(f'found nodes; {nodes}')
+
+        return nodes
